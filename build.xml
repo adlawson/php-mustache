@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project default="build">
+
+    <property name="basepath"  value="."/>
+    <property name="testpath"  value="."/>
+    <property name="buildpath" value="${basepath}/build"/>
+    <property name="libpath"   value="${basepath}/lib"/>
+
+    <!-- Main build process -->
+    <target name="build" depends="prepare,test,lint,phpcpd,phpdepend,phpmd" description="Build process"/>
+
+    <!-- Main test process -->
+    <target name="test" depends="prepare,phpunit" description="Run test suites"/>
+
+    <target name="clean" description="Remove build directory">
+        <delete dir="${buildpath}"/>
+    </target>
+
+    <target name="prepare" depends="clean" description="Prepare build environment">
+        <mkdir dir="${buildpath}/coverage"/>
+        <mkdir dir="${buildpath}/reports"/>
+    </target>
+
+    <target name="lint" depends="prepare" description="Scan for syntax errors">
+        <phplint haltonfailure="true">
+            <fileset dir="${libpath}"/>
+        </phplint>
+    </target>
+
+    <target name="phpcpd" depends="prepare" description="Scan for copy/paste violations">
+        <phpcpd file="${libpath}">
+            <formatter type="pmd" outfile="${buildpath}/reports/phpcpd.xml"/>
+        </phpcpd>
+    </target>
+
+    <target name="phpdepend" depends="prepare" description="Measure source code">
+        <phpdepend file="${libpath}">
+            <logger type="overview-pyramid" outfile="${buildpath}/reports/overview.svg"/>
+            <logger type="jdepend-chart" outfile="${buildpath}/reports/jdepend.svg"/>
+        </phpdepend>
+    </target>
+
+    <target name="phpmd" depends="prepare" description="Perform mess detection">
+        <phpmd rulesets="codesize,unusedcode,design">
+            <fileset dir="${libpath}"/>
+            <formatter type="xml" outfile="${buildpath}/reports/phpmd.xml"/>
+        </phpmd>
+    </target>
+
+    <target name="phpunit" depends="prepare" description="Run unit tests">
+        <exec checkreturn="true" passthru="true" dir="${basepath}" executable="phpunit">
+            <arg line="--coverage-html ${buildpath}/coverage"/>
+            <arg line="${testpath}"/>
+        </exec>
+    </target>
+
+</project>
