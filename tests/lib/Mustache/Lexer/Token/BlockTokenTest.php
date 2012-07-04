@@ -8,9 +8,18 @@ namespace Mustache\Lexer\Token;
  */
 class BlockTokenTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        $this->lexer = $this->getMock('Mustache\Lexer\LexerInterface');
+
+        $this->lexer->expects($this->any())
+            ->method('getDelimiters')
+            ->will($this->returnValue(array('{{', '}}')));
+    }
+
     public function testInterface()
     {
-        $token = new BlockToken('value');
+        $token = new BlockToken('value', $this->lexer);
 
         $this->assertInstanceOf('Mustache\Lexer\Token\TokenInterface', $token);
     }
@@ -18,7 +27,7 @@ class BlockTokenTest extends \PHPUnit_Framework_TestCase
     public function testValue()
     {
         $value = 'This is the token value. ' . PHP_EOL;
-        $token = new BlockToken($value);
+        $token = new BlockToken($value, $this->lexer);
 
         $this->assertSame(trim($value), $token->getValue());
     }

@@ -1,8 +1,7 @@
 <?php
 namespace Mustache\Lexer;
 
-use Mustache\Lexer\Token\BlockToken;
-use Mustache\Lexer\Token\Token;
+use Mustache\Lexer\Token\TokenFactory;
 use Mustache\Lexer\Token\TokenStream;
 
 /**
@@ -25,11 +24,6 @@ class Lexer implements LexerInterface
     const STATE_BLOCK   = 1;
 
     /**
-     * @var array
-     */
-    protected $delimiters = array();
-
-    /**
      * @var integer
      */
     protected $cursor;
@@ -40,19 +34,37 @@ class Lexer implements LexerInterface
     protected $encoding;
 
     /**
+     * @var string
+     */
+    protected $end;
+
+    /**
+     * @var TokenFactory
+     */
+    protected $factory;
+
+    /**
      * @var integer
      */
     protected $eof;
 
     /**
-     * @var integer
+     * @var string
      */
-    protected $line;
+    protected $start;
 
     /**
      * @var integer
      */
     protected $state;
+
+    /**
+     * @param TokenFactory $factory
+     */
+    public function __construct(TokenFactory $factory)
+    {
+        $this->factory = $factory;
+    }
 
     /**
      * Tokenize a template
@@ -63,60 +75,62 @@ class Lexer implements LexerInterface
      */
     public function tokenize($template)
     {
-        $stream = new TokenStream();
+        $stream = $this->factory->createStream();
         $this->prepare($template);
 
         while ($this->cursor < $this->eof) {
             if (static::STATE_BLOCK === $this->state) {
                 // Find the next occurrence of the end delimiter
-                $position = $this->getNextCursorPosition($template, $this->delimiters[1]);
+                $end = $this->getNextCursorPosition($template, $this->end);
 
-                // Get the trimmed content of the difference
-                $content = substr($template, $this->cursor, ($position - $this->cursor));
+                // Create the token
+                $token = $this->factory->createBlockToken(substr($template, $this->cursor, ($end - $this->cursor)), $this);
 
-                if ('=' === $content[0]) {
-                    // Set the delimiters
-                    $matches = explode(' ', trim($content, '= '));
-                    $this->setDelimiters(reset($matches), end($matches));
-                } else {
-                    // Create a block token with the content
-                    $stream->push(new BlockToken($content));
-                }
-
-                // Advance cursor to the new position
-                $this->cursor = $position + strlen($this->delimiters[1]);
-
-                // Set the new state
-                $this->state = static::STATE_DEFAULT;
+                // Advance the cursor
+                $this->cursor = $end + strlen($this->end);
+                $this->state  = static::STATE_DEFAULT;
             } else {
                 // Find the next occurrence of the start delimiter
-                $position = $this->getNextCursorPosition($template, $this->delimiters[0]);
+                $end = $this->getNextCursorPosition($template, $this->start);
 
-                // Create a simple token with the difference
-                $token = new Token(substr($template, $this->cursor, ($position - $this->cursor)));
-                $stream->push($token);
+                // Create the token
+                $token = $this->factory->createToken(substr($template, $this->cursor, ($end - $this->cursor)));
 
-                // Advance cursor to the new position
-                $this->cursor = $position + strlen($this->delimiters[0]);
-
-                // Set the new state
-                $this->state = static::STATE_BLOCK;
+                // Advance the cursor
+                $this->cursor = $end + strlen($this->start);
+                $this->state  = static::STATE_BLOCK;
             }
+
+            // Push the token onto the stream
+            $stream->push($token);
         }
+
+        $stream->push($this->factory->createEofToken());
         
         $this->tearDown();
         return $stream;
     }
 
     /**
-     * Set the tag delimiters
+     * Get the delimiters
+     * 
+     * @return array
+     */
+    public function getDelimiters()
+    {
+        return array($this->start, $this->end);
+    }
+
+    /**
+     * Set the delimiters
      * 
      * @param string $start
      * @param string $end
      */
     public function setDelimiters($start, $end)
     {
-        $this->delimiters = array($start, $end);
+        $this->end   = (string) $end;
+        $this->start = (string) $start;
     }
 
     /**
@@ -126,15 +140,14 @@ class Lexer implements LexerInterface
      */
     protected function prepare($template)
     {
-        $this->cursor = 0;
-        $this->line   = 1;
-        $this->eof    = strlen($template);
-        $this->state  = static::STATE_DEFAULT;
+        $this->encoding = mb_internal_encoding();
+        mb_internal_encoding('ASCII');
 
         $this->setDelimiters(static::DELIMITER_START, static::DELIMITER_END);
 
-        $this->encoding = mb_internal_encoding();
-        mb_internal_encoding('ASCII');
+        $this->cursor = 0;
+        $this->eof    = strlen($template);
+        $this->state  = 0 === strpos($template, $this->start) ? static::STATE_BLOCK: static::STATE_DEFAULT;
     }
 
     /**
@@ -153,6 +166,7 @@ class Lexer implements LexerInterface
      * Get the next cursor position
      * 
      * @param string $template
+     * 
      * @return integer
      */
     protected function getNextCursorPosition($template, $delimiter)

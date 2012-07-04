@@ -2,6 +2,7 @@
 namespace Mustache;
 
 use Mustache\Lexer\Lexer;
+use Mustache\Lexer\Token\TokenFactory;
 
 /**
  * @package  Mustache
@@ -11,10 +12,19 @@ use Mustache\Lexer\Lexer;
 class Environment
 {
     /**
+     * @var Lexer
+     */
+    protected $lexer;
+
+    /**
      * @return Lexer
      */
     public function getLexer()
     {
-        return new Lexer();
+        if (null === $this->lexer) {
+            $this->lexer = new Lexer(new TokenFactory());
+        }
+
+        return $this->lexer;
     }
 }

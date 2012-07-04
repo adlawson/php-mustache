@@ -18,7 +18,14 @@ interface LexerInterface
     public function tokenize($template);
 
     /**
-     * Set the tag delimiters
+     * Get the delimiters
+     * 
+     * @return array
+     */
+    public function getDelimiters();
+
+    /**
+     * Set the delimiters
      * 
      * @param string $start
      * @param string $end

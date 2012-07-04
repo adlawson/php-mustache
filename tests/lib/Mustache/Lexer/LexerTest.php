@@ -9,31 +9,40 @@ use Mustache\Lexer\Token\TokenStream;
  * @package  Mustache
  * @license  MIT License <LICENSE>
  * @link     http://github.com/adlawson/mustache
- *
- * @group integration
  */
 class LexerTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        $this->factory = new \Mustache\Lexer\Token\TokenFactory();
+        // $this->factory = $this->getMock('Mustache\Lexer\Token\TokenFactory');
+
+        // $this->factory->expects($this->once())
+        //     ->method('createStream')
+        //     ->will($this->returnValue($this->getMock('Mustache\Lexer\Token\TokenStream')));
+    }
+
     public function testInterface()
     {
-        $lexer = new Lexer();
+        $lexer = new Lexer($this->factory);
 
         $this->assertInstanceOf('Mustache\Lexer\LexerInterface', $lexer);
     }
 
     public function testSimpleTokenize()
     {
-        $lexer = new Lexer();
+        $lexer = new Lexer($this->factory);
         $template = 'This is {{ mustache }}.
         {{=<% %>=}}
         I just changed the <% delimiters %>';
 
         $expected = new TokenStream();
         $expected->push(new Token('This is '));
-        $expected->push(new BlockToken(' mustache '));
+        $expected->push(new BlockToken(' mustache ', $lexer));
         $expected->push(new Token('.' . PHP_EOL . '        '));
+        $expected->push(new BlockToken('=<% %>=', $lexer));
         $expected->push(new Token(PHP_EOL . '        I just changed the '));
-        $expected->push(new BlockToken(' delimiters '));
+        $expected->push(new BlockToken(' delimiters ', $lexer));
 
         $this->assertStream($expected, $lexer->tokenize($template));
     }

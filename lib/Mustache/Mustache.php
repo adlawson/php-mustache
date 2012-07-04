@@ -29,8 +29,6 @@ class Mustache
 
     /**
      * Render the template
-     *
-     * @todo Cache tokenizeed templates
      * 
      * @param string $template
      * @param array|object $context The variable context

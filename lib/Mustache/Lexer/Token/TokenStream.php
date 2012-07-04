@@ -1,6 +1,8 @@
 <?php
 namespace Mustache\Lexer\Token;
 
+use Mustache\Lexer\Lexer;
+
 /**
  * @package  Mustache
  * @license  MIT License <LICENSE>
@@ -13,8 +15,18 @@ class TokenStream extends \SplQueue
      */
     public function push($token)
     {
-        if ($token instanceof TokenInterface) {
+        if ($token instanceof TokenInterface && !$this->isLocked()) {
             parent::push($token);
         }
+    }
+
+    /**
+     * Check if the stream is locked to modification
+     * 
+     * @return boolean
+     */
+    public function isLocked()
+    {
+        return (0 < $this->count() && !$this->top() instanceof EofToken);
     }
 }

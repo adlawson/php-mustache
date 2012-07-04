@@ -1,7 +1,8 @@
 <?php
 namespace Mustache\Lexer\Token;
 
-use Mustache\Lexer\Modifier\ModifierInterface;
+use Mustache\Lexer\LexerException;
+use Mustache\Lexer\LexerInterface;
 
 /**
  * @package  Mustache
@@ -12,9 +13,23 @@ class BlockToken extends Token
 {
     /**
      * @param string $value
+     * @param LexerInterface $lexer
      */
-    public function __construct($value)
+    public function __construct($value, LexerInterface $lexer)
     {
-        parent::__construct(trim(strval($value)));
+        $value = trim(strval($value));
+
+        parent::__construct($value);
+
+        if (2 === substr_count($value, '=')) {
+            $matches = explode(' ', trim($value, '='));
+            $lexer->setDelimiters(reset($matches), end($matches));
+        } else {
+            $delimiters = $lexer->getDelimiters();
+
+            if (false !== strpos($value, reset($delimiters)) || false !== strpos($value, end($delimiters))) {
+                throw new LexerException('Invalid block value "' . $value . '"');
+            }
+        }
     }
 }
