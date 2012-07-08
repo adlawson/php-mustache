@@ -38,8 +38,16 @@ class Mustache
      */
     public function render($template, $context, array $partials = array())
     {
+        // Break up the template into simple tokens
         $tokenizedTemplate = $this->environment->getLexer()->tokenize($template);
 
-        
+        // Using the tokens, build a parse tree
+        $parseTree = $this->environment->getParser()->parse($tokenizedTemplate);
+
+        // Using the parse tree, compile the source code
+        $source = $this->environment->getCompiler()->compile($parseTree);
+
+        // Render the source
+        return $source->render();
     }
 }

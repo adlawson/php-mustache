@@ -16,7 +16,9 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
     public function containerInterfaceProvider()
     {
         return array(
-            array('getLexer', 'Mustache\Lexer\LexerInterface')
+            array('getCompiler', 'Mustache\Compiler\CompilerInterface'),
+            array('getLexer',    'Mustache\Lexer\LexerInterface'),
+            array('getParser',   'Mustache\Parser\ParserInterface')
         );
     }
 
