@@ -1,6 +1,8 @@
 <?php
 namespace Mustache\Lexer;
 
+use Mustache\Lexer\Token\TokenStream;
+
 /**
  * @package  Mustache
  * @license  MIT License <LICENSE>
@@ -13,7 +15,7 @@ interface LexerInterface
      * 
      * @param string $template
      * 
-     * @return TokenQueue
+     * @return TokenStream
      */
     public function tokenize($template);
 
