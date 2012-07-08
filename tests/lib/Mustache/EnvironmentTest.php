@@ -10,6 +10,9 @@ namespace Mustache;
  */
 class EnvironmentTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @return array
+     */
     public function containerInterfaceProvider()
     {
         return array(

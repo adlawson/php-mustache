@@ -24,6 +24,13 @@ class BlockTokenTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Mustache\Lexer\Token\TokenInterface', $token);
     }
 
+    public function testInvalidValue()
+    {
+        $this->setExpectedException('Mustache\Lexer\LexerException');
+
+        $token = new BlockToken('{{value}}', $this->lexer);
+    }
+
     public function testValue()
     {
         $value = 'This is the token value. ' . PHP_EOL;
