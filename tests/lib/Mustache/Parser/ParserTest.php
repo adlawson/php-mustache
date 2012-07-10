@@ -21,4 +21,16 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf('Mustache\Parser\ParserInterface', $this->parser);
     }
+
+    public function testParse()
+    {
+        $node   = $this->getMock('Mustache\Parser\Node\RootNode');
+        $stream = $this->getMock('Mustache\Lexer\Token\TokenStream');
+
+        $this->factory->expects($this->once())
+            ->method('createRootNode')
+            ->will($this->returnValue($node));
+
+        $this->assertSame($node, $this->parser->parse($stream));
+    }
 }

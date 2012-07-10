@@ -48,6 +48,6 @@ class Mustache
         $source = $this->environment->getCompiler()->compile($parseTree);
 
         // Render the source
-        return $source->render();
+        return $source->render($context);
     }
 }

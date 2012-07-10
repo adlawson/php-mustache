@@ -44,7 +44,7 @@ class SpecificationTest extends \PHPUnit_Framework_TestCase
      */
     public function testSpecification($name, $data, $expected, $template, $description, array $partials = array())
     {
-        $mustache = new Mustache;
+        $mustache = new Mustache();
 
         $result = $mustache->render($template, $data, $partials);
 
