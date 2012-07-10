@@ -45,7 +45,7 @@ class Mustache
         $parseTree = $this->environment->getParser()->parse($tokenized);
 
         // Using the parse tree, compile the template
-        $template = $this->environment->getCompiler()->compile($parseTree);
+        $template = $this->environment->getCompiler()->compile($parseTree, sha1($source));
 
         // Render the template
         return $template->render($context);

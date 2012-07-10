@@ -76,7 +76,7 @@ class Environment
      */
     public function getTemplateParent()
     {
-        return '\Mustache\Template\TemplateInterface';
+        return '\Mustache\Template\AbstractTemplate';
     }
 
     /**

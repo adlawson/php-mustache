@@ -31,7 +31,11 @@ class RootNode implements NodeInterface
     public function compile(CompilerInterface $compiler)
     {
         $this->compileClassHeader($compiler);
+        $this->compileRenderMethodHeader($compiler);
 
+        // foreach child
+
+        $this->compileRenderMethodFooter($compiler);
         $this->compileClassFooter($compiler);
     }
 
@@ -54,5 +58,33 @@ class RootNode implements NodeInterface
             ->write('class ' . $compiler->getClassName() . ' extends ' . $compiler->getParentClassName())
             ->write('{')
             ->indent();
+    }
+
+    /**
+     * @param CompilerInterface $compiler
+     */
+    protected function compileRenderMethodHeader(CompilerInterface $compiler)
+    {
+        $compiler
+            ->write('/**')
+            ->write(' * Render the template')
+            ->write(' *')
+            ->write(' * @param array|object $context The variable context')
+            ->write(' *')
+            ->write(' * @return string')
+            ->write(' */')
+            ->write('public function render($context)')
+            ->write('{')
+            ->indent();
+    }
+
+    /**
+     * @param CompilerInterface $compiler
+     */
+    protected function compileRenderMethodFooter(CompilerInterface $compiler)
+    {
+        $compiler
+            ->outdent()
+            ->write('}');
     }
 }

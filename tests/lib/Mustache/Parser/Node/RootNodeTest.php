@@ -31,11 +31,11 @@ class RootNodeTest extends \PHPUnit_Framework_TestCase
             ->method('write')
             ->will($this->returnValue($compiler));
 
-        $compiler->expects($this->once())
+        $compiler->expects($this->atLeastOnce())
             ->method('indent')
             ->will($this->returnValue($compiler));
 
-        $compiler->expects($this->once())
+        $compiler->expects($this->atLeastOnce())
             ->method('outdent')
             ->will($this->returnValue($compiler));
 

@@ -26,13 +26,24 @@ class Compiler implements CompilerInterface
      * Compile a node
      * 
      * @param NodeInterface $node
+     * @param string $id The template ID
      * 
      * @return TemplateInterface
      */
-    public function compile(NodeInterface $node)
+    public function compile(NodeInterface $node, $id)
     {
+        $this->id = $id;
         $this->prepare();
         $node->compile($this);
+
+        /**
+         * @todo Return the template source, not the instance
+         *
+         * The cache driver should be responsible for getting
+         * the instance after writing the source by storing
+         * in the file system and loading or running it though
+         * eval and storing in memory before loading
+         */
 
         return new EvalTemplate($this->source);
     }
@@ -78,14 +89,12 @@ class Compiler implements CompilerInterface
 
     /**
      * Get the template class name
-     *
-     * @todo For caching purposes, this value needs to be reproducable
      * 
      * @return string
      */
     public function getClassName()
     {
-        return $this->prefix . md5(time());
+        return $this->prefix . $this->id;
     }
 
     /**

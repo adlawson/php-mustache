@@ -14,10 +14,11 @@ interface CompilerInterface
      * Compile a node
      * 
      * @param NodeInterface $node
+     * @param string $id The template ID
      * 
      * @return TemplateInterface
      */
-    public function compile(NodeInterface $node);
+    public function compile(NodeInterface $node, $id);
 
     /**
      * Indent cursor
