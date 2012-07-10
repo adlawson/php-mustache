@@ -30,24 +30,24 @@ class Mustache
     /**
      * Render the template
      * 
-     * @param string $template
+     * @param string $source
      * @param array|object $context The variable context
      * @param array $partials
      * 
      * @return string The rendered template
      */
-    public function render($template, $context, array $partials = array())
+    public function render($source, $context, array $partials = array())
     {
-        // Break up the template into simple tokens
-        $tokenizedTemplate = $this->environment->getLexer()->tokenize($template);
+        // Break up the source into simple tokens
+        $tokenized = $this->environment->getLexer()->tokenize($source);
 
         // Using the tokens, build a parse tree
-        $parseTree = $this->environment->getParser()->parse($tokenizedTemplate);
+        $parseTree = $this->environment->getParser()->parse($tokenized);
 
-        // Using the parse tree, compile the source code
-        $source = $this->environment->getCompiler()->compile($parseTree);
+        // Using the parse tree, compile the template
+        $template = $this->environment->getCompiler()->compile($parseTree);
 
-        // Render the source
-        return $source->render($context);
+        // Render the template
+        return $template->render($context);
     }
 }
