@@ -55,7 +55,7 @@ class StreamCacheDriver implements CacheDriverInterface
     public function read($id)
     {
         if (!$this->exists($id)) {
-            throw new CacheException('No template found with ID "' . $id . '"');
+            throw new CacheException('No template found at "' . $this->getTemplateUrl($id) . '"');
         }
 
         $template = $this->environment->getTemplateNamespace() . '\\' .
