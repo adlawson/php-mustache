@@ -1,11 +1,15 @@
 <?php
 namespace Mustache;
 
+use Mustache\Cache\CacheDriverInterface;
 use Mustache\Cache\StreamCacheDriver;
 use Mustache\Compiler\Compiler;
+use Mustache\Compiler\CompilerInterface;
 use Mustache\Lexer\Lexer;
+use Mustache\Lexer\LexerInterface;
 use Mustache\Lexer\Token\TokenFactory;
 use Mustache\Parser\Parser;
+use Mustache\Parser\ParserInterface;
 use Mustache\Parser\Node\NodeFactory;
 
 /**
@@ -16,22 +20,22 @@ use Mustache\Parser\Node\NodeFactory;
 class Environment
 {
     /**
-     * @var StreamCacheDriver
+     * @var CacheDriverInterface
      */
     protected $cacheDriver;
 
     /**
-     * @var Lexer
+     * @var LexerInterface
      */
     protected $lexer;
 
     /**
-     * @var Parser
+     * @var ParserInterface
      */
     protected $parser;
 
     /**
-     * @return StreamCacheDriver
+     * @return CacheDriverInterface
      */
     public function getCacheDriver()
     {
@@ -47,7 +51,7 @@ class Environment
     }
 
     /**
-     * @return Compiler
+     * @return CompilerInterface
      */
     public function getCompiler()
     {
@@ -59,7 +63,7 @@ class Environment
     }
 
     /**
-     * @return Lexer
+     * @return LexerInterface
      */
     public function getLexer()
     {
@@ -71,7 +75,7 @@ class Environment
     }
 
     /**
-     * @return Parser
+     * @return ParserInterface
      */
     public function getParser()
     {
