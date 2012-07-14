@@ -80,6 +80,18 @@ class StreamCacheDriver implements CacheDriverInterface
     }
 
     /**
+     * Register a stream wrapper
+     * 
+     * @param string $wrapper The stream wrapper class name
+     */
+    public function register($wrapper)
+    {
+        if (!in_array(static::PROTOCOL, stream_get_wrappers())) {
+            stream_wrapper_register(static::PROTOCOL, $wrapper);
+        }
+    }
+
+    /**
      * Get the URL to the template
      * 
      * @param string $id

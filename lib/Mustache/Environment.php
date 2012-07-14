@@ -40,11 +40,8 @@ class Environment
     public function getCacheDriver()
     {
         if (null === $this->cacheDriver) {
-            if (!in_array(StreamCacheDriver::PROTOCOL, stream_get_wrappers())) {
-                stream_wrapper_register(StreamCacheDriver::PROTOCOL, 'Mustache\Cache\Stream\MemoryWrapper');
-            }
-
             $this->cacheDriver = new StreamCacheDriver($this);
+            $this->cacheDriver->register('Mustache\Cache\Stream\MemoryWrapper');
         }
 
         return $this->cacheDriver;
