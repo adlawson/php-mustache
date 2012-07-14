@@ -4,14 +4,17 @@ namespace Mustache\Cache;
 use Mustache\Environment;
 
 /**
- * @todo Base the cache on streams rather than eval :D
- * 
  * @package  Mustache
  * @license  MIT License <LICENSE>
  * @link     http://github.com/adlawson/mustache
  */
-class ArrayDriver implements CacheDriverInterface
+class StreamCacheDriver implements CacheDriverInterface
 {
+    /**
+     * @const string
+     */
+    const PROTOCOL = 'mustache';
+
     /**
      * @var Environment
      */
@@ -39,7 +42,7 @@ class ArrayDriver implements CacheDriverInterface
      */
     public function exists($id)
     {
-        return isset($this->storage[$id]);
+        return file_exists($this->getTemplateUrl($id));
     }
 
     /**
@@ -55,7 +58,12 @@ class ArrayDriver implements CacheDriverInterface
             throw new CacheException('No template found with ID "' . $id . '"');
         }
 
-        return $this->storage[$id];
+        $template = $this->environment->getTemplateNamespace() . '\\' .
+                    $this->environment->getTemplatePrefix() . $id;
+
+        include_once $this->getTemplateUrl($id);
+
+        return new $template($this->environment);
     }
 
     /**
@@ -65,13 +73,21 @@ class ArrayDriver implements CacheDriverInterface
      */
     public function write($source, $id)
     {
-        $template = $this->environment->getTemplateNamespace() . '\\' .
-                    $this->environment->getTemplatePrefix() . $id;
+        $file = fopen($this->getTemplateUrl($id), "w");
 
-        if (!class_exists($template, false)) {
-            eval('?>' . $source);
-        }
+        fwrite($file, $source);
+        fclose($file);
+    }
 
-        $this->storage[$id] = new $template($this->environment);
+    /**
+     * Get the URL to the template
+     * 
+     * @param string $id
+     * 
+     * @return string
+     */
+    protected function getTemplateUrl($id)
+    {
+        return static::PROTOCOL . '://' . $id;
     }
 }

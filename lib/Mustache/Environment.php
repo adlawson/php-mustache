@@ -1,7 +1,7 @@
 <?php
 namespace Mustache;
 
-use Mustache\Cache\ArrayDriver;
+use Mustache\Cache\StreamCacheDriver;
 use Mustache\Compiler\Compiler;
 use Mustache\Lexer\Lexer;
 use Mustache\Lexer\Token\TokenFactory;
@@ -16,7 +16,7 @@ use Mustache\Parser\Node\NodeFactory;
 class Environment
 {
     /**
-     * @var StreamCache
+     * @var StreamCacheDriver
      */
     protected $cacheDriver;
 
@@ -31,12 +31,16 @@ class Environment
     protected $parser;
 
     /**
-     * @return ArrayCache
+     * @return StreamCacheDriver
      */
     public function getCacheDriver()
     {
         if (null === $this->cacheDriver) {
-            $this->cacheDriver = new ArrayDriver($this);
+            if (!in_array(StreamCacheDriver::PROTOCOL, stream_get_wrappers())) {
+                stream_wrapper_register(StreamCacheDriver::PROTOCOL, 'Mustache\Cache\Stream\MemoryWrapper');
+            }
+
+            $this->cacheDriver = new StreamCacheDriver($this);
         }
 
         return $this->cacheDriver;
