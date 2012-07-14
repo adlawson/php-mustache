@@ -19,10 +19,15 @@ class MustacheTest extends \PHPUnit_Framework_TestCase
         $this->stream   = $this->getMock('Mustache\Lexer\Token\TokenStream');
         $this->template = $this->getMock('Mustache\Template\TemplateInterface');
 
+        $this->cache = $this->getMock('Mustache\Cache\CacheDriverInterface');
+        $this->cache->expects($this->any())
+            ->method('read')
+            ->will($this->returnValue($this->template));
+
         $this->compiler = $this->getMock('Mustache\Compiler\CompilerInterface');
         $this->compiler->expects($this->any())
             ->method('compile')
-            ->will($this->returnValue($this->template));
+            ->will($this->returnValue(''));
 
         $this->lexer = $this->getMock('Mustache\Lexer\LexerInterface');
         $this->lexer->expects($this->any())
@@ -33,6 +38,10 @@ class MustacheTest extends \PHPUnit_Framework_TestCase
         $this->parser->expects($this->any())
             ->method('parse')
             ->will($this->returnValue($this->node));
+
+        $this->environment->expects($this->any())
+            ->method('getCacheDriver')
+            ->will($this->returnValue($this->cache));
 
         $this->environment->expects($this->any())
             ->method('getCompiler')

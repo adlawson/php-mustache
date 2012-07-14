@@ -38,14 +38,22 @@ class Mustache
      */
     public function render($source, $context, array $partials = array())
     {
-        // Break up the source into simple tokens
-        $tokenized = $this->environment->getLexer()->tokenize($source);
+        $id = sha1($source);
+        $cache = $this->environment->getCacheDriver();
 
-        // Using the tokens, build a parse tree
-        $parseTree = $this->environment->getParser()->parse($tokenized);
+        if (!$cache->exists($id)) {
+            // Break up the source into simple tokens
+            $tokenized = $this->environment->getLexer()->tokenize($source);
 
-        // Using the parse tree, compile the template
-        $template = $this->environment->getCompiler()->compile($parseTree, sha1($source));
+            // Using the tokens, build a parse tree
+            $parseTree = $this->environment->getParser()->parse($tokenized);
+
+            // Using the parse tree, compile the template
+            $cache->write($this->environment->getCompiler()->compile($parseTree, $id), $id);
+        }
+
+        // Get the template instance
+        $template = $cache->read($id);
 
         // Render the template
         return $template->render($context);

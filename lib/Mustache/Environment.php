@@ -1,6 +1,7 @@
 <?php
 namespace Mustache;
 
+use Mustache\Cache\ArrayDriver;
 use Mustache\Compiler\Compiler;
 use Mustache\Lexer\Lexer;
 use Mustache\Lexer\Token\TokenFactory;
@@ -15,6 +16,11 @@ use Mustache\Parser\Node\NodeFactory;
 class Environment
 {
     /**
+     * @var StreamCache
+     */
+    protected $cacheDriver;
+
+    /**
      * @var Lexer
      */
     protected $lexer;
@@ -23,6 +29,18 @@ class Environment
      * @var Parser
      */
     protected $parser;
+
+    /**
+     * @return ArrayCache
+     */
+    public function getCacheDriver()
+    {
+        if (null === $this->cacheDriver) {
+            $this->cacheDriver = new ArrayDriver($this);
+        }
+
+        return $this->cacheDriver;
+    }
 
     /**
      * @return Compiler

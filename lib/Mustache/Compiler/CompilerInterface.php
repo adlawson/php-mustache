@@ -14,9 +14,9 @@ interface CompilerInterface
      * Compile a node
      * 
      * @param NodeInterface $node
-     * @param string $id The template ID
+     * @param string $id
      * 
-     * @return TemplateInterface
+     * @return string The compiled source
      */
     public function compile(NodeInterface $node, $id);
 

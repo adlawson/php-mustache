@@ -75,7 +75,9 @@ class RootNode implements NodeInterface
             ->write(' */')
             ->write('public function render($context)')
             ->write('{')
-            ->indent();
+            ->indent()
+            ->write('ob_start();')
+            ->write('');
     }
 
     /**
@@ -84,6 +86,7 @@ class RootNode implements NodeInterface
     protected function compileRenderMethodFooter(CompilerInterface $compiler)
     {
         $compiler
+            ->write('return ob_get_clean();')
             ->outdent()
             ->write('}');
     }
