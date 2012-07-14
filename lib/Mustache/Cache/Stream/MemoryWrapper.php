@@ -69,7 +69,7 @@ class MemoryWrapper implements StreamWrapperInterface
             $this->cursor += strlen($output);
         }
 
-        if (empty($output)) {
+        if ('' === $output || $this->cursor > strlen(static::$storage[$this->id])) {
             $this->eof = true;
         }
 
