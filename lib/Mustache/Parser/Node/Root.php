@@ -64,7 +64,7 @@ class Root extends Branch
             ->write('public function render($context)')
             ->write('{')
             ->indent()
-            ->write('ob_start();')
+            ->write('$output = \'\';')
             ->write('');
     }
 
@@ -74,7 +74,7 @@ class Root extends Branch
     protected function compileRenderMethodFooter(CompilerInterface $compiler)
     {
         $compiler
-            ->write('return ob_get_clean();')
+            ->write('return $output;')
             ->outdent()
             ->write('}');
     }

@@ -78,6 +78,7 @@ class Environment
     {
         if (null === $this->parser) {
             $this->parser = new Parser(new NodeFactory(array(
+                'Mustache\Parser\Node\CommentNode',
                 'Mustache\Parser\Node\PrintNode',
                 'Mustache\Parser\Node\TextNode'
             )));

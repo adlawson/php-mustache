@@ -31,6 +31,16 @@ class TextNode extends Node
      */
     public function compile(CompilerInterface $compiler)
     {
-        $compiler->write('echo ' . $this->value . ';');
+        $compiler->write('$output .= \'' . $this->value . '\';');
+    }
+
+    /**
+     * Apply a callback to the text
+     * 
+     * @param Closure $callback
+     */
+    public function applyCallback(\Closure $callback)
+    {
+        $this->value = $callback($this->value);
     }
 }

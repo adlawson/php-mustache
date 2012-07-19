@@ -31,6 +31,14 @@ class CommentNode extends Node
      */
     public function compile(CompilerInterface $compiler)
     {
-        // No output
+        if ($this->previous instanceof TextNode) {
+            $compiler->write('$output = preg_replace(\'/(^|\n+)[^\S\n]+$/\', \'$1\', $output);');
+        }
+
+        if ($this->next instanceof TextNode) {
+            $this->next->applyCallback(function($value) {
+                return ltrim($value);
+            });
+        }
     }
 }

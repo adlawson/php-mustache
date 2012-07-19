@@ -46,11 +46,16 @@ abstract class Node implements NodeInterface
 
     /**
      * Set the previous node
+     *
+     * This also sets self as the next node on the
+     * node given here.
      * 
      * @param NodeInterface $node
      */
     public function setPrevious(NodeInterface $node)
     {
         $this->previous = $node;
+
+        $node->setNext($this);
     }
 }
