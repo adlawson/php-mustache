@@ -35,7 +35,17 @@ class Parser implements ParserInterface
      */
     public function parse(TokenStream $stream)
     {
-        $tree = $this->factory->createRootNode();
+        $tree = $this->factory->createRoot();
+
+        foreach ($stream as $token) {
+            $node = $this->factory->createFromToken($token);
+
+            if ($tree->count()) {
+                $node->setPrevious($tree->top());
+            }
+
+            $tree->push($node);
+        }
 
         return $tree;
     }

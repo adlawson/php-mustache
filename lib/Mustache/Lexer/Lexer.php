@@ -104,8 +104,6 @@ class Lexer implements LexerInterface
             // Push the token onto the stream
             $stream->push($token);
         }
-
-        $stream->push($this->factory->createEofToken());
         
         $this->tearDown();
         return $stream;

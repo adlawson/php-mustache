@@ -24,11 +24,11 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParse()
     {
-        $node   = $this->getMock('Mustache\Parser\Node\RootNode');
+        $node   = $this->getMock('Mustache\Parser\Node\Root');
         $stream = $this->getMock('Mustache\Lexer\Token\TokenStream');
 
         $this->factory->expects($this->once())
-            ->method('createRootNode')
+            ->method('createRoot')
             ->will($this->returnValue($node));
 
         $this->assertSame($node, $this->parser->parse($stream));

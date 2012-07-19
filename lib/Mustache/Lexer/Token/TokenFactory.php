@@ -45,14 +45,4 @@ class TokenFactory
     {
         return new BlockToken($value, $lexer);
     }
-
-    /**
-     * Create a new EOF token
-     * 
-     * @return Token
-     */
-    public function createEofToken()
-    {
-        return new EofToken();
-    }
 }

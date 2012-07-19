@@ -29,9 +29,9 @@ class NodeFactory
      * 
      * @return Root
      */
-    public function createRootNode()
+    public function createRoot()
     {
-        return new RootNode();
+        return new Root();
     }
 
     /**
@@ -45,7 +45,7 @@ class NodeFactory
     {
         foreach ($this->nodes as $node) {
             if (true === call_user_func(array($node, 'supports'), $token)) {
-                return new $node($token);
+                return new $node($token->getValue());
             }
         }
 

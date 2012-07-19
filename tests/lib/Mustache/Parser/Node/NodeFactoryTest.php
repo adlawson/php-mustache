@@ -15,11 +15,11 @@ class NodeFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Mustache\Parser\Node\NodeFactory', $factory);
     }
 
-    public function testCreateRootNode()
+    public function testCreateRoot()
     {
         $factory = new NodeFactory(array());
 
-        $this->assertInstanceOf('Mustache\Parser\Node\RootNode', $factory->createRootNode());
+        $this->assertInstanceOf('Mustache\Parser\Node\Root', $factory->createRoot());
     }
 
     public function testCreateFromTokenWithSupportingNode()

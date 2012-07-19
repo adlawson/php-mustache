@@ -26,4 +26,18 @@ interface NodeInterface
      * @param CompilerInterface $compiler
      */
     public function compile(CompilerInterface $compiler);
+
+    /**
+     * Set the next node
+     * 
+     * @param NodeInterface $node
+     */
+    public function setNext(NodeInterface $node);
+
+    /**
+     * Set the previous node
+     * 
+     * @param NodeInterface $node
+     */
+    public function setPrevious(NodeInterface $node);
 }

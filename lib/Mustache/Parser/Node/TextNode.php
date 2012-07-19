@@ -10,21 +10,8 @@ use Mustache\Lexer\Token\TokenInterface;
  * @license  MIT License <LICENSE>
  * @link     http://github.com/adlawson/mustache
  */
-class TextNode implements NodeInterface
+class TextNode extends Node
 {
-    /**
-     * @var string
-     */
-    protected $value;
-
-    /**
-     * @param string $value
-     */
-    public function __construct($value)
-    {
-        $this->value = $value;
-    }
-
     /**
      * Check if the node supports a given token
      * 

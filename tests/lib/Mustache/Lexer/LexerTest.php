@@ -15,11 +15,6 @@ class LexerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->factory = new \Mustache\Lexer\Token\TokenFactory();
-        // $this->factory = $this->getMock('Mustache\Lexer\Token\TokenFactory');
-
-        // $this->factory->expects($this->once())
-        //     ->method('createStream')
-        //     ->will($this->returnValue($this->getMock('Mustache\Lexer\Token\TokenStream')));
     }
 
     public function testInterface()
@@ -55,6 +50,18 @@ class LexerTest extends \PHPUnit_Framework_TestCase
      */
     public function assertStream(TokenStream $expected, TokenStream $actual)
     {
+        if (count($expected) !== count($actual)) {
+            ob_start();
+            var_dump($expected);
+            $expectedDump = ob_get_clean();
+
+            ob_start();
+            var_dump($actual);
+            $actualDump = ob_get_clean();
+
+            $this->failDump($expectedDump, $actualDump, 'Streams are not equal');
+        }
+
         foreach ($expected as $i => $token) {
             if (!$actual->offsetExists($i) ||
                 $token != $actual->offsetGet($i) ||
@@ -72,17 +79,29 @@ class LexerTest extends \PHPUnit_Framework_TestCase
                 var_dump($token);
                 $expectedDump = ob_get_clean();
 
-                $this->fail(
-                    'Tokens in stream are not equal.' . PHP_EOL .
-                    '--- Expected' . PHP_EOL .
-                    '+++ Actual' . PHP_EOL .
-                    '@@ @@' . PHP_EOL .
-                    '- ' . $expectedDump .
-                    '+ ' . $actualDump
-                );
+                $this->failDump($expectedDump, $actualDump, 'Tokens in stream are not equal.');
             }
         }
 
         $this->assertTrue(true);
+    }
+
+    /**
+     * Fail with var dumps
+     * 
+     * @param string $expected
+     * @param string $actual
+     * @param string $message
+     */
+    protected function failDump($expected, $actual, $message)
+    {
+        $this->fail(
+            $message . PHP_EOL .
+            '--- Expected' . PHP_EOL .
+            '+++ Actual' . PHP_EOL .
+            '@@ @@' . PHP_EOL .
+            '- ' . $expected .
+            '+ ' . $actual
+        );
     }
 }

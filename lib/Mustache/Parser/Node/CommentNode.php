@@ -10,7 +10,7 @@ use Mustache\Lexer\Token\TokenInterface;
  * @license  MIT License <LICENSE>
  * @link     http://github.com/adlawson/mustache
  */
-class PrintNode extends Node
+class CommentNode extends Node
 {
     /**
      * Check if the node supports a given token
@@ -21,7 +21,7 @@ class PrintNode extends Node
      */
     public static function supports(TokenInterface $token)
     {
-        return $token instanceof BlockToken && false === strpos($token->getValue(), ' ');
+        return $token instanceof BlockToken && 0 === strpos($token->getValue(), '!');
     }
 
     /**
@@ -31,6 +31,6 @@ class PrintNode extends Node
      */
     public function compile(CompilerInterface $compiler)
     {
-        $compiler->write('echo isset($context[\'' . $this->value . '\'] ? $context[\'' . $this->value . '\'] : null;');
+        // No output
     }
 }

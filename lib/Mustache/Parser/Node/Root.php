@@ -9,20 +9,8 @@ use Mustache\Lexer\Token\TokenInterface;
  * @license  MIT License <LICENSE>
  * @link     http://github.com/adlawson/mustache
  */
-class RootNode implements NodeInterface
+class Root extends Branch
 {
-    /**
-     * Check if the node supports a given token
-     * 
-     * @param TokenInterface $token
-     * 
-     * @return boolean
-     */
-    public static function supports(TokenInterface $token)
-    {
-        return false;
-    }
-
     /**
      * Compile the source
      * 
@@ -33,7 +21,7 @@ class RootNode implements NodeInterface
         $this->compileClassHeader($compiler);
         $this->compileRenderMethodHeader($compiler);
 
-        // foreach child
+        parent::compile($compiler);
 
         $this->compileRenderMethodFooter($compiler);
         $this->compileClassFooter($compiler);

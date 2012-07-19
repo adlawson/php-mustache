@@ -6,25 +6,25 @@ namespace Mustache\Parser\Node;
  * @license  MIT License <LICENSE>
  * @link     http://github.com/adlawson/mustache
  */
-class RootNodeTest extends \PHPUnit_Framework_TestCase
+class RootTest extends \PHPUnit_Framework_TestCase
 {
     public function testInterface()
     {
-        $node = new RootNode();
+        $node = new Root();
 
         $this->assertInstanceOf('Mustache\Parser\Node\NodeInterface', $node);
     }
 
     public function testSupports()
     {
-        $node = new RootNode();
+        $node = new Root();
 
         $this->assertFalse($node->supports($this->getMock('Mustache\Lexer\Token\TokenInterface')));
     }
 
     public function testCompile()
     {
-        $node = new RootNode();
+        $node = new Root();
         $compiler = $this->getMock('Mustache\Compiler\CompilerInterface');
 
         $compiler->expects($this->atLeastOnce())
