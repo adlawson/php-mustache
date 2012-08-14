@@ -14,9 +14,9 @@ class PrintNode extends Node
 {
     /**
      * Check if the node supports a given token
-     * 
+     *
      * @param TokenInterface $token
-     * 
+     *
      * @return boolean
      */
     public static function supports(TokenInterface $token)
@@ -26,11 +26,11 @@ class PrintNode extends Node
 
     /**
      * Compile the source
-     * 
+     *
      * @param CompilerInterface $compiler
      */
     public function compile(CompilerInterface $compiler)
     {
-        $compiler->write('echo isset($context[\'' . $this->value . '\'] ? $context[\'' . $this->value . '\'] : null;');
+        $compiler->write('$output .= isset($context[\'' . $this->value . '\']) ? $context[\'' . $this->value . '\'] : null;');
     }
 }
